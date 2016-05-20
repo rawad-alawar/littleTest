@@ -6,15 +6,18 @@ var mock = new MockBrowser();
 GLOBAL.document = mock.getDocument();
 
 var AMLTranslator = require(translateModule);
-console.log(AMLTranslator)
 var testStrings = [
    ["Hello, World!",
     "Hello, World!"],
-   ["Hello, ^%World!^!%",
-    "Hello, <STRONG>World!</STRONG>"],
+   ["Hello, ^~^%World!^!%^!~",
+    "Hello, <EM><STRONG>World!</STRONG></EM>"],
    ["Greetings ^%from ^~Glornix^!% Beta-Nine^!~.",
-    "Greetings <STRONG>from <EM>Glornix</EM></STRONG><EM> Beta-Nine</EM>."]
-   // Other test strings here.
+    "Greetings <STRONG>from <EM>Glornix</EM></STRONG><EM> Beta-Nine</EM>."],
+  //  Other test strings here.
+   ["Greetings ^%from ^~Glornix^!% Beta-Nine^!~. Greetings ^%from ^~Glornix^!% Beta-Nine^!~. Greetings ^%from ^~Glornix^!% Beta-Nine^!~. Greetings ^%from ^~Glornix^!% Beta-Nine^!~. Greetings ^%from ^~Glornix^!% Beta-Nine^!~. Greetings ^%from ^~Glornix^!% Beta-Nine^!~.",
+    "Greetings <STRONG>from <EM>Glornix</EM></STRONG><EM> Beta-Nine</EM>. Greetings <STRONG>from <EM>Glornix</EM></STRONG><EM> Beta-Nine</EM>. Greetings <STRONG>from <EM>Glornix</EM></STRONG><EM> Beta-Nine</EM>. Greetings <STRONG>from <EM>Glornix</EM></STRONG><EM> Beta-Nine</EM>. Greetings <STRONG>from <EM>Glornix</EM></STRONG><EM> Beta-Nine</EM>. Greetings <STRONG>from <EM>Glornix</EM></STRONG><EM> Beta-Nine</EM>."],
+   ["In the ^~town, where I was born,^% Lived a man who sailed to sea^!~ And he told us of his life^!%",
+    "In the <EM>town, where I was born,<STRONG> Lived a man who sailed to sea</STRONG></EM><STRONG> And he told us of his life</STRONG>"]
 ];
 
 testStrings.forEach(function(val, idx, array) {
@@ -31,3 +34,6 @@ testStrings.forEach(function(val, idx, array) {
     console.log("Example " + (idx + 1) + " correct.");
   }
 });
+// "Greetings <STRONG>from <EM>Glornix</STRONG> Beta-Nine</EM>. Greetings <STRONG>from <EM>Glornix</STRONG> Beta-Nine</EM>."
+// 'Greetings <STRONG>from <EM>Glornix</EM></STRONG><EM> Beta-Nine</EM>. Greetings <STRONG>from <EM>Glornix</STRONG> Beta-Nine</EM>.'
+// 'Greetings <STRONG>from <EM>Glornix</EM></STRONG><EM> Beta-Nine</EM>. Greetings <STRONG>from <EM>Glorn</EM>ix</STRON<EM>G> Beta-Nine</EM>.'
