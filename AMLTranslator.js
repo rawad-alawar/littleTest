@@ -6,7 +6,8 @@ var AMLTranslator = (function(){
       alien = alien.replace(/\^%/g, "<STRONG>");
       alien = alien.replace(/\^!%/g, "</STRONG>");
       alien = alien.replace(/\^~/g, "<EM>");
-      alien = alien.replace(/\^!~/g, "</EM>"); //alien is now a string with HTML version of the tags, but alien still lacks the HTML formatting such as a tag closing within its parent tag
+      alien = alien.replace(/\^!~/g, "</EM>");
+      //alien is now a string with HTML version of the tags, but alien still lacks the HTML formatting such as a tag closing within its parent tag
 
       //Initializes empty arrays that will hold the index points of the tags
       var indexStrongClose = []
@@ -33,14 +34,14 @@ var AMLTranslator = (function(){
 
       for (var j=0; j<indexEmOpen.length; j++){
         for (var l=0; l<indexStrongOpen.length; l++){
-          if (indexEmOpen[j] > indexStrongOpen[l] && indexEmOpen[j] < indexStrongClose[l]){
-            //If an EM tag is between an open/close pair of STRONG tags, </EM> is spliced before the closing STRONG tag and <EM> is spliced after the closing STRONG tag. Because a single AML tag cannot be opend twice without being closed, the added opening <EM> tag automatically creates a proper <EM></EM> tag conversion in HTML. We know that a STRONG tag will not be opened between our new <EM></EM> pair.
+          if ((indexEmOpen[j] > indexStrongOpen[l] && indexEmOpen[j] < indexStrongClose[l]) && indexEmClose[j] > indexStrongClose[l]){
+            //If an EM tag is between an open/close pair of STRONG tags, </EM> is spliced before the closing STRONG tag and <EM> is spliced after the closing STRONG tag. Because a single AML tag cannot be opend twice without being closed, the added opening <EM> tag automatically creates a proper <EM></EM> tag conversion in HTML. We know that a STRONG tag will not be opened between our new <EM></EM> pair. Also, the last && condition checks for tags that are closed within their parent tag in the AML language. Those tags will be left alone because they are already in the proper format.
             alien.splice([indexStrongClose[j]],0,'</EM>')
             alien.splice([indexStrongClose[j]+10],0,'<EM>')
 
             //To correct for the changing index points in the array caused by adding tags, I change the index point of the next STRONG closing point to compensate. The effect is not constant, so I tied it to the 'j' variable in the loop
             indexStrongClose[j+1]=indexStrongClose[j+1]+2+j+j
-          }else if (indexStrongOpen[j] > indexEmOpen[l] && indexStrongOpen[j] < indexEmClose[l]){
+          }else if ((indexStrongOpen[j] > indexEmOpen[l] && indexStrongOpen[j] < indexEmClose[l]) && indexStrongClose[j] > indexEmClose[l]){
             //Accounts for any <STRONG> opening tags in between a pair of consecutive open/close EM tags. Works the same as the above if statement.
              alien.splice([indexEmClose[j]],0,'</STRONG>')
              alien.splice([indexEmClose[j]+6],0,'<STRONG>')
